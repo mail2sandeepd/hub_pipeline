@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
-    DOCKER_IMAGE_NAME = 'my-docker-image'
+    DOCKER_IMAGE_NAME = 'mail2sandeepd/my-docker-image'
     DOCKER_IMAGE_TAG = 'latest'
   }
 
@@ -11,7 +11,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          def dockerImage = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f path/to/Dockerfile .")
+          def dockerImage = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f Dockerfile .")
           dockerImage.push()
         }
       }
