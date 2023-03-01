@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+  
+  environment {
+    DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+    DOCKER_IMAGE_NAME = 'mail2sandeepd/my-docker-image'
+    DOCKER_IMAGE_TAG = 'latest'
+    KUBECONFIG = credentials('kubernetes-config')
+  }
+  
+  stages {
+    stage('Deploy to Kubernetes') {
+      steps {
+        script {
+          kubeconfig(configFileVariable: 'KUBECONFIG') {
+            sh 'kubectl apply -f deployment.yaml'
+          }
+        }
+      }
+    }
+  }
+}
