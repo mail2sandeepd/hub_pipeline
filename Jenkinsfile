@@ -15,9 +15,16 @@ pipeline {
         }
         stage('Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin"
                     sh 'docker push "${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}" '
+                }
+            }
+        }
+		stage('Deploy application to Kubernetes') {
+            steps {
+                withCredentials([kubeconfig(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
+                    sh "export IMAGE_NAME=$IMAGE_NAME && export KUBECONFIG=$KUBECONFIG && envsubst < kubernetes-deployment.yaml | kubectl apply -f -"
                 }
             }
         }
