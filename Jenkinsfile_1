@@ -11,11 +11,8 @@ pipeline {
   stages {
     stage('Deploy to Kubernetes') {
       steps {
-        script {
-          kubeconfig(configFileVariable: 'KUBECONFIG') {
-            sh 'kubectl apply -f deployment.yaml'
-          }
-        }
+        sh 'kubectl config use-context my-cluster'
+        sh 'kubectl apply -f my-deployment.yaml'
       }
     }
   }
