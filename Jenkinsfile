@@ -24,7 +24,7 @@ pipeline {
 	stage('Deploy application to Kubernetes') {
             steps {
                 withCredentials([kubeconfig(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
-                    sh "export IMAGE_NAME=$IMAGE_NAME && export KUBECONFIG=$KUBECONFIG && envsubst < kubernetes-deployment.yaml | kubectl apply -f -"
+                    sh "export IMAGE_NAME=$IMAGE_NAME && export KUBECONFIG=$KUBECONFIG && envsubst < deployment.yaml | kubectl apply -f -"
                 }
             }
         }
